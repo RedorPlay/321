@@ -43,19 +43,23 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.spn -= 1
         if event.key() == Qt.Key_Up:
             self.pos[1] = int(self.pos[1])
-            self.pos[1] += self.spn
+            if self.pos[1] + self.spn < 90:
+                self.pos[1] += self.spn
             self.pos[1] = str(self.pos[1])
         if event.key() == Qt.Key_Down:
             self.pos[1] = int(self.pos[1])
-            self.pos[1] -= self.spn
+            if self.pos[1] - self.spn > -90:
+                self.pos[1] -= self.spn
             self.pos[1] = str(self.pos[1])
         if event.key() == Qt.Key_Right:
             self.pos[0] = int(self.pos[0])
-            self.pos[0] += self.spn
+            if self.pos[0] + self.spn < 180:
+                self.pos[0] += self.spn
             self.pos[0] = str(self.pos[0])
         if event.key() == Qt.Key_Left:
             self.pos[0] = int(self.pos[0])
-            self.pos[0] -= self.spn
+            if self.pos[0] - self.spn > -180:
+                self.pos[0] -= self.spn
             self.pos[0] = str(self.pos[0])
 
         self.run()
