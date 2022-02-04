@@ -1,0 +1,44 @@
+import sys
+import requests
+from main_123123 import Ui_MainWindow
+from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QHeaderView, QLabel
+from PyQt5.QtWidgets import QApplication, QPushButton
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
+
+
+class MyWidget(QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.button.clicked.connect(self.run)
+        self.spn = 0.5
+
+    def run(self):
+        pos = (self.lineEdit.text(), self.lineEdit_2.text())
+        pos = ','.join(pos)
+        map_request = f"https://static-maps.yandex.ru/1.x/?ll={pos}&spn={self.spn},{self.spn}&l=map"
+        response = requests.get(map_request)
+        if not response:
+            print("Ошибка выполнения запроса:")
+            print(map_request)
+            print("Http статус:", response.status_code, "(", response.reason, ")")
+            sys.exit(1)
+
+        with open('map_yandex.png', "wb") as file:
+            file.write(response.content)
+
+        self.pixmap = QPixmap('map_yandex.png')
+        self.label.setPixmap(self.pixmap)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_O:
+            self.spn += 0.5
+        if event.key() == Qt.Key_L:
+            self.spn -= 0.5
+        self.run()
+
+app = QApplication(sys.argv)
+ex = MyWidget()
+ex.show()
+sys.exit(app.exec())
